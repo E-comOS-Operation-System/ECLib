@@ -1,0 +1,12 @@
+=================================================================
+                      ECLib - E-comOS Common Library
+                          Oct , 28 2025
+                       E-comOS Kernel Mode Team
+=================================================================
+The ECLib is a C Library for E-comOS , because E-comOS are not a 
+Unix-Like system , so , something must ourself to created or did.
+EClib is a MAIN REPO for basic link library , some library is created
+in other repo such as TGlib
+=================================================================
+How to use it 
+-----------------------------------------------------------------
