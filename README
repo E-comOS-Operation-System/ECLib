@@ -1,4 +1,4 @@
-=================================================================
+================================================================
                       ECLib - E-comOS Common Library
                           Oct , 28 2025
                        E-comOS Kernel Mode Team
@@ -10,3 +10,7 @@ in other repo such as TGlib
 =================================================================
 How to use it 
 -----------------------------------------------------------------
+This is ECLib , its means it is installed in your E-comOS , its not
+support to user cause users cannot use it in thier work.
+If you wannt "When the main process exits, you also want the sub-process
+in the background not to be killed.",you can use this library such as
