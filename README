@@ -1,16 +1,31 @@
 ================================================================
-                      ECLib - E-comOS Common Library
+                      ECLib - E-comOS C Library
                           Oct , 28 2025
                        E-comOS Kernel Mode Team
 =================================================================
-The ECLib is a C Library for E-comOS , because E-comOS are not a 
-Unix-Like system , so , something must ourself to created or did.
-EClib is a MAIN REPO for basic link library , some library is created
-in other repo such as TGlib
+The ECLib is a C Library for E-comOS , because E-comOS are not a Unix-Like system , so , something must ourself to created or did.
+EClib is a MAIN REPO for basic link library , some library is createdin other repo such as TGlib
 =================================================================
 How to use it 
 -----------------------------------------------------------------
-This is ECLib , its means it is installed in your E-comOS , its not
-support to user cause users cannot use it in thier work.
-If you wannt "When the main process exits, you also want the sub-process
-in the background not to be killed.",you can use this library such as
+This is ECLib , its means it is installed in your E-comOS , its notsupport to user cause users cannot use it in thier work.
+If you wannt "When the main process exits, you also want the sub-processin the background not to be killed.",you can use this library such as
+  #include <ipc_message.h>
+  // ... Other code
+  ipc_do_not_kill_sub();
+This is a exmple for this library's use , and tt also has other functions, such as informing Rui not to keep your app's icon in the dock if your app's uninstaller is deleted, only need
+  #include <rui_messeage.h>
+  // ... Other code
+  rui_delteled_remove_icon();
+IT'S SO EASY
+=================================================================
+How to install it 
+-----------------------------------------------------------------
+It must installed in your E-comOS , but sometimes , E-comOS it only installed Rust Library , you can
+  epm install eclib
+EPM is worte by rust , so you don't need to care its working
+=================================================================
+License
+-----------------------------------------------------------------
+For various reasons, and after weighing the pros and cons, we have ultimately decided to use the GNU LGPL license for open source. However, other libraries may use the GNU GPL or GNU AGPL. The GNU official website does not recommend that any organization or individual use the GNU LGPL.
+=================================================================
