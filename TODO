@@ -1,0 +1,2 @@
+1. We communicated with the kernel team to resolve the inaccuracy issue in line 58 of ipc_message.c (which could cause IPC to malfunction).
+2. We must to chat with kernel team again to chat about the IPC messages

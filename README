@@ -8,7 +8,7 @@ EClib is a MAIN REPO for basic link library , some library is createdin other re
 =================================================================
 How to use it 
 -----------------------------------------------------------------
-This is ECLib , its means it is installed in your E-comOS , its notsupport to user cause users cannot use it in thier work.
+This is ECLib , its means it is installed in your E-comOS , its not support to user cause users cannot use it in thier work.
 If you wannt "When the main process exits, you also want the sub-processin the background not to be killed.",you can use this library such as
   #include <ipc_message.h>
   // ... Other code
