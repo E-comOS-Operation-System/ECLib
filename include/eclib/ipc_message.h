@@ -90,4 +90,8 @@ typedef struct {
 */
 eclib_err_t ipc_get_msg_state(uint64_t msg_seq, uint8_t* msg_state);
 
+eclib_err_t ipc_call_sync(uint32_t pid, uint16_t msg_id, 
+                         const void* req_data, size_t req_len,
+                         void* resp_buf, size_t* resp_len,
+                         uint32_t timeout_ms);
 #endif // ECLIB_IPC_MESSAGE_H

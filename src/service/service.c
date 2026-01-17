@@ -8,9 +8,10 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "service.h"
-#include "ipc_message.h"
-#include "error.h"
+#include "../../include/eclib/service.h"
+#include "../../include/eclib/ipc_message.h"
+#include "../../include/eclib/error.h"
+#include "../../include/eclib/utils.h"
 #include <stdint.h>
 static uint32_t get_registry_pid(void) {
     return 1;
@@ -29,6 +30,7 @@ uint32_t eclib_service_lookup(const char* service_name) {
         return 0;
     }
     service_lookup_req_t req;
+
     eclib_strncpy(req.service_name, service_name, sizeof(req.service_name)-1);
     req.service_name[sizeof(req.service_name)-1] = '\0';
     service_lookup_resp_t resp;

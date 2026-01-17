@@ -8,9 +8,9 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "utils.h"
-#include "error.h"
-#include "ipc_message.h"
+#include "../../include/eclib/utils.h"
+#include "../../include/eclib/error.h"
+#include "../../include/eclib/ipc_message.h"
 // --------------------------
 // String
 // --------------------------

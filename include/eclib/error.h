@@ -91,4 +91,6 @@
 #define ECLIB_ECLIB_DEPENDENCY_VERSION_MISMATCH 0x108 // Dependency version mismatch (Incompatible version of a required dependency detected!)
 #define ECLIB_ECLIB_CANNOT_FIND_RESOURCE 0x109 // Cannot find resource (Required resource file missing or corrupted!)
 #define ECLIB_ECLIB_INSUFFICIENT_PERMISSIONS 0x10A // Insufficient permissions (Operation requires higher privileges!)
+/* fnuction declarations */
+int eclib_set_last_err(int error_code);
 #endif

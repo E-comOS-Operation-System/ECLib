@@ -8,11 +8,18 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "ipc_message.h"
-#include "error.h"
-#include "men.h"
-#include "utils.h"
-#include "service.h"
+#include "../../include/eclib/ipc_message.h"
+#include "../../include/eclib/error.h"
+#include "../../include/eclib/men.h"
+#include "../../include/eclib/utils.h"
+#include "../../include/eclib/service.h"
+#include "../../include/eclib/ipc_message.h"  // Add IPC header
+#include <string.h>                  // Add for memset if needed
+
+// Add missing function declarations
+uint32_t eclib_service_lookup(const char* service_name);
+void* eclib_memset(void* ptr, int value, size_t num);
+
 // Command codes agreed upon with the memory_manager service
 #define MEM_CMD_MALLOC  0x2001
 #define MEM_CMD_FREE    0x2002
@@ -40,10 +47,12 @@ typedef struct {
     void* new_addr; 
     eclib_err_t err;
 } mem_realloc_resp_t;
+
 static uint32_t get_memory_manager_pid(void) {
     return eclib_service_lookup("memory_manager");
 }
-// Mentory Managaer
+
+// Memory Manager
 void* eclib_malloc(size_t size) {
     if (size == 0) {
         eclib_set_last_err(ECLIB_ECLIB_INVALID_PARAMETER);
@@ -52,16 +61,14 @@ void* eclib_malloc(size_t size) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
-
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return NULL;
     }
 
-  
     mem_malloc_req_t req = {.size = size};
     mem_malloc_resp_t resp;
     size_t resp_len = sizeof(resp);
 
-    
     eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_MALLOC,
         &req, sizeof(req),
@@ -86,19 +93,22 @@ void eclib_free(void* addr) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return;
     }
 
-
     mem_free_req_t req = {.addr = addr};
 
- 
-    ipc_call_sync(
+    eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_FREE,
         &req, sizeof(req),
         NULL, NULL,
         500  
     );
+    
+    if (err != ECLIB_OK) {
+        eclib_set_last_err(err);
+    }
 }
 
 void* eclib_calloc(size_t nmemb, size_t size) {
@@ -106,8 +116,9 @@ void* eclib_calloc(size_t nmemb, size_t size) {
         eclib_set_last_err(ECLIB_ECLIB_INVALID_PARAMETER);
         return NULL;
     }
+    
+    // Check for multiplication overflow
     size_t total_size = nmemb * size;
-
     if (size != 0 && total_size / size != nmemb) {
         eclib_set_last_err(ECLIB_ECLIB_CANNOT_ALLOCATE_MEMORY);
         return NULL;
@@ -131,9 +142,9 @@ void* eclib_realloc(void* ptr, size_t size) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return NULL;
     }
-
 
     mem_realloc_req_t req = {
         .old_addr = ptr,
@@ -141,7 +152,6 @@ void* eclib_realloc(void* ptr, size_t size) {
     };
     mem_realloc_resp_t resp;
     size_t resp_len = sizeof(resp);
-
 
     eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_REALLOC,

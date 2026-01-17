@@ -1,6 +1,6 @@
-#include "start.h"
-#include "utils.h" 
-#include "error.h"
+#include "../../include/eclib/start.h"
+#include "../../include/eclib/utils.h" 
+#include "../../include/eclib/error.h"
 
 // Define user main
 extern int main(int argc, char**argv);

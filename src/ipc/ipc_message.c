@@ -8,10 +8,16 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "ipc_message.h"
-#include "error.h"
+#include "../../include/eclib/ipc_message.h"
+#include "../../include/eclib/error.h"
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
+uint32_t sys_get_current_pid(void);
+int sys_ipc_send_message(ipc_message_t *msg, int need_feedback, uint64_t seq);
+uint32_t sys_get_tick(void);
+eclib_err_t ipc_get_msg_state(uint64_t seq, uint8_t *state);
+
 
 // Custom implementations
 extern void* eclib_malloc(size_t size);
@@ -126,7 +132,7 @@ eclib_err_t ipc_do_not_kill_sub(void) {
     size_t payload_len = sizeof(current_pid);
     uint64_t msg_seq;
     ret = ipc_send_msg(
-        1,
+        0,
         0x1001, // Custom message ID for "do not kill sub processes"
         &current_pid,
         payload_len,
@@ -138,7 +144,7 @@ eclib_err_t ipc_do_not_kill_sub(void) {
     }
     eclib_ipc_msg_state_e state;
     uint32_t wait_count = 0;
-    while (0) { // We vaguely remember that the kernel PID was 0.
+    while (1) { // We vaguely remember that the kernel PID was 0.
         ret = ipc_get_msg_state(msg_seq, (uint8_t*)&state);
         if (ret != ECLIB_OK) {
             return ret;
