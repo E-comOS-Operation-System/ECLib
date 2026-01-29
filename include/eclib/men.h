@@ -8,8 +8,8 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#ifndef ECLIB_SERVICE_H
-#define ECLIB_SERVICE_H
+#ifndef ECLIB_MEN_H
+#define ECLIB_MEN_H
 #include "error.h"
 #include "ipc_message.h"
 #include <stdint.h>

@@ -8,9 +8,11 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "rui.h"
-// #include "service.h"
-// #include "utils.h"
+#include "eclib/rui.h" // Corrected include path
+#include "eclib/service.h" // Added for eclib_service_lookup
+#include "eclib/utils.h" // Added for eclib_strncpy
+#include "eclib/ipc_message.h"
+#include <string.h> // Added for memcpy
 
 // Global variable: RUI service PID (valid after initialization)
 static uint32_t g_rui_pid = 0;
@@ -93,9 +95,16 @@ eclib_err_t eclib_rui_wait_event(rui_event_t* event, uint32_t timeout_ms) {
 
     // Receive "event notification" type messages sent by RUI (custom message type needs to be defined in IPC)
     #define ECLIB_IPC_MSG_TYPE_RUI_EVENT 0x2001
-    return ipc_recv(
-        ECLIB_IPC_MSG_TYPE_RUI_EVENT, // Custom message type: RUI event
-        event, sizeof(rui_event_t),
-        timeout_ms
-    );
+
+    ipc_message_t msg = {0};
+    msg.type = ECLIB_IPC_MSG_TYPE_RUI_EVENT;
+
+    eclib_err_t err = ipc_recv(&msg, timeout_ms);
+    if (err == ECLIB_OK && msg.data_len == sizeof(rui_event_t)) {
+        memcpy(event, msg.data, sizeof(rui_event_t));
+    } else {
+        err = ECLIB_IPC_BUFFER_OVERFLOW;
+    }
+
+    return err;
 }

@@ -8,7 +8,7 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#ifdef ECLIB_UTILS_H
+#ifndef ECLIB_UTILS_H
 #define ECLIB_UTILS_H
 #include <stddef.h>
 #include <stdint.h>
@@ -18,7 +18,13 @@
 size_t eclib_strlen(const char* str);
 char* eclib_strncpy(char* dest, const char* src, size_t max_len);
 int eclib_strcmp(const char* str1, const char* str2);
+int eclib_strncmp(const char* str1, const char* str2, size_t n);
 const char* eclib_strstr(const char* str, const char* substr);
+char* eclib_strchr(const char* s, int c);
+char* eclib_strrchr(const char* s, int c);
+char* eclib_strdup(const char* s);
+char* eclib_strtok(char* str, const char* delim);
+int eclib_snprintf(char* buf, size_t size, const char* fmt, ...);
 // --------------------------
 // Mentory
 // --------------------------

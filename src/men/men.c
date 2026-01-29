@@ -8,11 +8,11 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "ipc_message.h"
-#include "error.h"
-#include "men.h"
-#include "utils.h"
-#include "service.h"
+#include "eclib/error.h"
+#include "eclib/men.h"
+#include "eclib/utils.h"
+#include "eclib/service.h"
+#include "eclib/ipc_message.h"
 // Command codes agreed upon with the memory_manager service
 #define MEM_CMD_MALLOC  0x2001
 #define MEM_CMD_FREE    0x2002
@@ -40,6 +40,10 @@ typedef struct {
     void* new_addr; 
     eclib_err_t err;
 } mem_realloc_resp_t;
+
+// Ensure ipc_call_sync is declared before usage
+int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+
 static uint32_t get_memory_manager_pid(void) {
     return eclib_service_lookup("memory_manager");
 }

@@ -8,9 +8,11 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "utils.h"
-#include "error.h"
-#include "ipc_message.h"
+#include "eclib/utils.h"
+#include "eclib/error.h"
+#include "eclib/ipc_message.h"
+#include "eclib/men.h"
+#include <stdarg.h>
 // --------------------------
 // String
 // --------------------------
@@ -142,4 +144,104 @@ int eclib_toupper(int c) {
         return c - ('a' - 'A');
     }
     return c;
+}
+
+int eclib_strncmp(const char* str1, const char* str2, size_t n) {
+    if (!str1 || !str2) return str1 ? 1 : (str2 ? -1 : 0);
+    for (size_t i = 0; i < n; i++) {
+        if (str1[i] != str2[i] || str1[i] == '\0')
+            return (unsigned char)str1[i] - (unsigned char)str2[i];
+    }
+    return 0;
+}
+
+char* eclib_strchr(const char* s, int c) {
+    if (!s) return 0;
+    while (*s) {
+        if (*s == (char)c) return (char*)s;
+        s++;
+    }
+    return (c == '\0') ? (char*)s : 0;
+}
+
+char* eclib_strrchr(const char* s, int c) {
+    if (!s) return 0;
+    const char* last = 0;
+    while (*s) {
+        if (*s == (char)c) last = s;
+        s++;
+    }
+    if (c == '\0') return (char*)s;
+    return (char*)last;
+}
+
+char* eclib_strdup(const char* s) {
+    if (!s) return 0;
+    size_t len = eclib_strlen(s);
+    char* dup = eclib_malloc(len + 1);
+    if (dup) eclib_memcpy(dup, s, len + 1);
+    return dup;
+}
+
+static char* strtok_state = 0;
+
+char* eclib_strtok(char* str, const char* delim) {
+    if (str) strtok_state = str;
+    if (!strtok_state) return 0;
+    
+    while (*strtok_state && eclib_strchr(delim, *strtok_state))
+        strtok_state++;
+    
+    if (!*strtok_state) return 0;
+    
+    char* token = strtok_state;
+    while (*strtok_state && !eclib_strchr(delim, *strtok_state))
+        strtok_state++;
+    
+    if (*strtok_state) {
+        *strtok_state = '\0';
+        strtok_state++;
+    }
+    
+    return token;
+}
+
+int eclib_snprintf(char* buf, size_t size, const char* fmt, ...) {
+    if (!buf || !size || !fmt) return -1;
+    
+    va_list args;
+    va_start(args, fmt);
+    
+    size_t pos = 0;
+    while (*fmt && pos < size - 1) {
+        if (*fmt == '%' && *(fmt + 1)) {
+            fmt++;
+            if (*fmt == 's') {
+                const char* s = va_arg(args, const char*);
+                if (s) {
+                    while (*s && pos < size - 1)
+                        buf[pos++] = *s++;
+                }
+            } else if (*fmt == 'd') {
+                int val = va_arg(args, int);
+                char tmp[32];
+                int i = 0, neg = val < 0;
+                if (neg) val = -val;
+                do { tmp[i++] = '0' + (val % 10); val /= 10; } while (val);
+                if (neg && pos < size - 1) buf[pos++] = '-';
+                while (i > 0 && pos < size - 1) buf[pos++] = tmp[--i];
+            } else if (*fmt == 'c') {
+                buf[pos++] = (char)va_arg(args, int);
+            } else {
+                buf[pos++] = *fmt;
+            }
+        } else {
+            buf[pos++] = *fmt;
+        }
+        fmt++;
+    }
+    buf[pos] = '\0';
+    
+    va_end(args);
+    return pos;
 }

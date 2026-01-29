@@ -8,9 +8,10 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "service.h"
-#include "ipc_message.h"
-#include "error.h"
+#include "eclib/service.h"
+#include "eclib/ipc_message.h" // Updated include directive
+#include "eclib/error.h"
+#include "eclib/utils.h"
 #include <stdint.h>
 static uint32_t get_registry_pid(void) {
     return 1;

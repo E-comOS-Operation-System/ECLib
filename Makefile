@@ -23,6 +23,7 @@ ifeq ($(DEBUG),1)
 CFLAGS := -g -O0 -Wall -Iinclude
 endif
 
+# Add ebts/printkit.c to the source files
 SRCS := $(shell find src -type f -name '*.c' 2>/dev/null)
 OBJS := $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
@@ -54,6 +55,9 @@ $(OBJ_DIR)/%.o: src/%.c
 $(LIB_DIR):
 	@mkdir -p $@
 
+# Ensure the include directory for ebts is added
+CFLAGS += -Iinclude/ebts
+
 install: all
 	@echo "Installing to $(DESTDIR)$(LIB_INSTALL_DIR) and $(DESTDIR)$(INCLUDE_INSTALL_DIR)"
 	@mkdir -p $(DESTDIR)$(LIB_INSTALL_DIR)
@@ -61,10 +65,18 @@ install: all
 	@cp -a $(TARGET_STATIC) $(DESTDIR)$(LIB_INSTALL_DIR)/
 	@cp -a include/* $(DESTDIR)$(INCLUDE_INSTALL_DIR)/
 
+	@echo "Installing headers to $(INCLUDE_INSTALL_DIR)"
+	install -d $(INCLUDE_INSTALL_DIR)
+	install -m 644 include/eclib/*.h $(INCLUDE_INSTALL_DIR)
+	install -m 644 include/ebts/*.h $(INCLUDE_INSTALL_DIR)/../ebts
+	@echo "Installing libraries to $(LIB_INSTALL_DIR)"
+	install -d $(LIB_INSTALL_DIR)
+	install -m 644 $(TARGET_STATIC) $(LIB_INSTALL_DIR)
+
 uninstall:
 	@echo "Removing installed files from $(DESTDIR)$(LIB_INSTALL_DIR) and $(DESTDIR)$(INCLUDE_INSTALL_DIR)"
 	@rm -f $(DESTDIR)$(LIB_INSTALL_DIR)/libeclib.a
 	@rm -rf $(DESTDIR)$(INCLUDE_INSTALL_DIR)
 
 clean:
-	$(RM) $(BUILD_DIR) $(LIB_DIR)
+	$(RM) -rf $(BUILD_DIR) $(LIB_DIR)

@@ -8,11 +8,17 @@
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  */
-#include "file.h"
-#include "ipc_message.h"
-#include "error.h"
+#include "eclib/file.h"
+#include "eclib/ipc_message.h" // Corrected include path
+#include "eclib/error.h" // Corrected include path
 #include <stdint.h>
 #include <stddef.h>
+
+// Add missing declarations
+uint32_t eclib_service_lookup(const char* service_name);
+void eclib_strncpy(char* dest, const char* src, size_t n);
+int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+
 static uint32_t get_file_control_pid(void) {
     return eclib_service_lookup("file_control");  // From service_registry to get.
 }
