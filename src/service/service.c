@@ -30,6 +30,7 @@ uint32_t eclib_service_lookup(const char* service_name) {
         return 0;
     }
     service_lookup_req_t req;
+
     eclib_strncpy(req.service_name, service_name, sizeof(req.service_name)-1);
     req.service_name[sizeof(req.service_name)-1] = '\0';
     service_lookup_resp_t resp;

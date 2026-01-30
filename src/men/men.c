@@ -47,7 +47,8 @@ int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t re
 static uint32_t get_memory_manager_pid(void) {
     return eclib_service_lookup("memory_manager");
 }
-// Mentory Managaer
+
+// Memory Manager
 void* eclib_malloc(size_t size) {
     if (size == 0) {
         eclib_set_last_err(ECLIB_ECLIB_INVALID_PARAMETER);
@@ -56,16 +57,14 @@ void* eclib_malloc(size_t size) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
-
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return NULL;
     }
 
-  
     mem_malloc_req_t req = {.size = size};
     mem_malloc_resp_t resp;
     size_t resp_len = sizeof(resp);
 
-    
     eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_MALLOC,
         &req, sizeof(req),
@@ -90,19 +89,22 @@ void eclib_free(void* addr) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return;
     }
 
-
     mem_free_req_t req = {.addr = addr};
 
- 
-    ipc_call_sync(
+    eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_FREE,
         &req, sizeof(req),
         NULL, NULL,
         500  
     );
+    
+    if (err != ECLIB_OK) {
+        eclib_set_last_err(err);
+    }
 }
 
 void* eclib_calloc(size_t nmemb, size_t size) {
@@ -110,8 +112,9 @@ void* eclib_calloc(size_t nmemb, size_t size) {
         eclib_set_last_err(ECLIB_ECLIB_INVALID_PARAMETER);
         return NULL;
     }
+    
+    // Check for multiplication overflow
     size_t total_size = nmemb * size;
-
     if (size != 0 && total_size / size != nmemb) {
         eclib_set_last_err(ECLIB_ECLIB_CANNOT_ALLOCATE_MEMORY);
         return NULL;
@@ -135,9 +138,9 @@ void* eclib_realloc(void* ptr, size_t size) {
 
     uint32_t mem_pid = get_memory_manager_pid();
     if (mem_pid == 0) {
+        eclib_set_last_err(ECLIB_ECLIB_CANNOT_FIND_MODULE);
         return NULL;
     }
-
 
     mem_realloc_req_t req = {
         .old_addr = ptr,
@@ -145,7 +148,6 @@ void* eclib_realloc(void* ptr, size_t size) {
     };
     mem_realloc_resp_t resp;
     size_t resp_len = sizeof(resp);
-
 
     eclib_err_t err = ipc_call_sync(
         mem_pid, MEM_CMD_REALLOC,

@@ -53,11 +53,11 @@ uint32_t eclib_rui_create_window(const rui_point_t* pos, const rui_size_t* size,
         g_rui_pid, RUI_CMD_WINDOW_CREATE,
         &req, sizeof(req),
         &resp, &resp_len,
-        1000 // Timeout 1 second
+        500
     );
 
     if (err != ECLIB_OK || resp.err != ECLIB_OK) {
-        eclib_set_last_err(resp.err ?: err);
+        eclib_set_last_err(err);
         return 0;
     }
     return resp.window_id; // Return window ID
