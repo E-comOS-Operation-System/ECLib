@@ -17,7 +17,9 @@
 // Add missing declarations
 uint32_t eclib_service_lookup(const char* service_name);
 void eclib_strncpy(char* dest, const char* src, size_t n);
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+
+// Removed conflicting declaration of ipc_call_sync
+// Ensure the correct declaration from ipc_message.h is used.
 
 static uint32_t get_file_control_pid(void) {
     return eclib_service_lookup("file_control");  // From service_registry to get.

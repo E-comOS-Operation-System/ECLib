@@ -10,9 +10,6 @@
 #define PIPE_CMD_CREATE 0x6001
 #define PIPE_CMD_DUP2   0x6002
 
-// Add the missing declaration for ipc_call_sync
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
-
 int eclib_pipe(int pipefd[2]) {
     uint32_t service_pid = eclib_service_lookup(PIPE_SERVICE_NAME);
     if (!service_pid) return -1;

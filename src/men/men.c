@@ -41,8 +41,8 @@ typedef struct {
     eclib_err_t err;
 } mem_realloc_resp_t;
 
-// Ensure ipc_call_sync is declared before usage
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+// Removed conflicting declaration of ipc_call_sync
+// Ensure the correct declaration from ipc_message.h is used.
 
 static uint32_t get_memory_manager_pid(void) {
     return eclib_service_lookup("memory_manager");

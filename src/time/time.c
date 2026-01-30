@@ -9,9 +9,6 @@
 #define TIME_SERVICE_NAME "time_service"
 #define TIME_CMD_GET 0x4001
 
-// Add the missing declaration for ipc_call_sync
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
-
 eclib_time_t eclib_time(eclib_time_t* t) {
     uint32_t service_pid = eclib_service_lookup(TIME_SERVICE_NAME);
     if (!service_pid) return 0;

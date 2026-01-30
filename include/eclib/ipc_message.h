@@ -133,7 +133,7 @@ int ipc_request_shutdown_exemption(int timeout_ms);
  *   ECLIB_IPC_TIMEOUT: Timeout occurred
  *   ECLIB_IPC_SERVICE_UNAVAIL: IPC service not available
  */
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+eclib_err_t ipc_call_sync(uint32_t pid, uint16_t msg_id, const void* req_data, size_t req_len, void* resp_buf, size_t* resp_len, uint32_t timeout_ms);
 
 /*
  * Receive an IPC message
@@ -179,8 +179,4 @@ int ipc_peek_message(uint32_t* type, uint32_t* sender_pid);
  */
 int ipc_clear_queue(void);
 
-eclib_err_t ipc_call_sync(uint32_t pid, uint16_t msg_id, 
-                         const void* req_data, size_t req_len,
-                         void* resp_buf, size_t* resp_len,
-                         uint32_t timeout_ms);
 #endif // ECLIB_IPC_MESSAGE_H

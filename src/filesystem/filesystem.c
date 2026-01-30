@@ -33,8 +33,8 @@ typedef struct {
     eclib_err_t err;
 } getcwd_resp_t;
 
-// Add the missing declaration for ipc_call_sync
-int ipc_call_sync(uint32_t service_pid, uint32_t cmd, const void* req, size_t req_len, void* resp, size_t* resp_len, int timeout);
+// Removed conflicting declaration of ipc_call_sync
+// Ensure the correct declaration from ipc_message.h is used.
 
 int eclib_stat(const char* path, eclib_stat_t* buf) {
     uint32_t service_pid = eclib_service_lookup(FS_SERVICE_NAME);
